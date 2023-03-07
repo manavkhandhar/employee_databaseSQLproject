@@ -1,0 +1,66 @@
+
+-- average salary
+SELECT AVG(Salary) AS Avg_Salary,Employee_Gender as Gender from `payroll.employee_payroll`
+group by Employee_Gender;
+
+-- lowest salary for both genders
+
+SELECT MIN(Salary) AS Minimum_Salary,Employee_Gender as Gender from `payroll.employee_payroll`
+group by Employee_Gender;
+
+-- highest salary for both genders
+
+SELECT MAX(Salary) AS Maximum_Salary,Employee_Gender as Gender from `payroll.employee_payroll`
+group by Employee_Gender;
+
+-- no. of active employees
+
+SELECT COUNT(Employee_ID) as Active_Employees, 
+from `payroll.employee_payroll`
+where Employee_Term_Date IS NULL;
+
+-- no. of terminated employees till date
+
+SELECT COUNT(Employee_ID) as Terminated_Employees, 
+from `payroll.employee_payroll`
+where Employee_Term_Date IS NOT NULL;
+
+-- grouped marital status of employees
+
+select Marital_Status, COUNT(Employee_Gender) as Number_of_Employees
+from `payroll.employee_payroll`
+group by Marital_Status;
+
+
+-- Add a new column with the DATE data type
+ALTER TABLE `payroll.employee_payroll`
+ADD COLUMN Birth_Date_new DATE;
+
+-- Update the new column with the parsed date values from the old column
+UPDATE `payroll.employee_payroll`
+SET Birth_Date_new = PARSE_DATE('%d%b%y', Birth_Date)
+WHERE Birth_Date IS NOT NULL;
+
+-- Drop the old string column
+ALTER TABLE `payroll.employee_payroll`
+DROP COLUMN Birth_Date;
+
+-- Rename the new column to the old column name
+ALTER TABLE `payroll.employee_payroll`
+RENAME COLUMN Birth_Date_new TO Birth_Date;
+
+-- no. of male employees
+
+SELECT COUNT(Employee_Gender) as total_male_employees
+from `payroll.employee_payroll`
+where Employee_Gender = 'M'
+group by Employee_Gender;
+
+-- no. of female employees
+
+SELECT COUNT(Employee_Gender) as total_female_employees
+from `payroll.employee_payroll`
+where Employee_Gender = 'F'
+group by Employee_Gender
+
+
